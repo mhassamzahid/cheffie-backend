@@ -26,7 +26,16 @@ def place_order(data: OrderCreate, db: Session = Depends(get_db)):
 
     order = create_order(db, customer.id, data.items)
 
-    send_sms(customer.phone, f"Order #{order.id} confirmed!")
+    try:
+        send_sms(
+            customer.phone,
+            f"Order #{order.id} confirmed! Thank you for ordering."
+        )
+    except Exception as e:
+        raise HTTPException(500, f"SMS failed: {str(e)}")
+
+    order.status = "confirmed"
+    db.commit()
 
     return order
 
