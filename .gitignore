@@ -1,2 +1,5 @@
 venv
 .env
+lambda*
+/package
+/__pycache__
